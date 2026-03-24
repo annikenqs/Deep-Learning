@@ -11,7 +11,7 @@ from sklearn.metrics import (
     classification_report,
 )
 
-from dataset import load_splits
+from src.dataset import load_splits
 
 
 def evaluate(name, y_true, y_pred):
