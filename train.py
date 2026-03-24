@@ -6,7 +6,7 @@ from sklearn.metrics import (
     f1_score,
 )
 
-from dataset import load_splits
+from src.dataset import load_splits
 from src.logisticReg_TF_IDF import create_logistic_reg_tfidf_model
 from src.naive_bayes_TF_IDF import create_naive_bayes_tfidf_model
 
