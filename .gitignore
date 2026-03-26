@@ -1,0 +1,31 @@
+# Virtual environment
+
+venv/
+
+# Python cache
+
+__pycache__/
+*.pyc
+
+# MacOS
+
+.DS_Store
+
+# Model artifacts (large files)
+
+models/distilbert_default/
+models/*.joblib
+models/*.bin
+models/*.safetensors
+models/*.json
+models/predicted_results.csv
+
+
+# Output files
+
+predicted_results.csv
+
+# IDE
+
+.vscode/
+.idea/
