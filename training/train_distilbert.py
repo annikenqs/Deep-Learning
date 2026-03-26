@@ -22,6 +22,7 @@ def compute_metrics(eval_pred):
     logits, labels = eval_pred
     preds = np.argmax(logits, axis=1)
 
+    # Compute standard classification metrics
     precision, recall, f1, _ = precision_recall_fscore_support(
         labels, preds, average="binary"
     )
@@ -35,6 +36,7 @@ def compute_metrics(eval_pred):
     }
 
 
+# Convert raw text into token IDs for DistilBERT
 def tokenize_function(examples, tokenizer):
     return tokenizer(
         examples["input_text"],
@@ -50,6 +52,7 @@ def main():
 
     train_df, val_df, _ = load_splits("Dataset")
 
+    # Apply tokenization to datasets
     train_hf = Dataset.from_pandas(
         train_df[["input_text", "label_id"]].rename(columns={"label_id": "labels"})
     )
@@ -86,6 +89,7 @@ def main():
         num_labels=2,
     )
 
+    # Training configuration
     training_args = TrainingArguments(
         output_dir=OUTPUT_DIR,
         eval_strategy="epoch",
@@ -102,6 +106,7 @@ def main():
         report_to="none",
     )
 
+    # Trainer handles training loop, evaluation, and saving
     trainer = Trainer(
         model=model,
         args=training_args,
@@ -110,11 +115,13 @@ def main():
         compute_metrics=compute_metrics,
     )
 
+    # Fine-tune the model
     trainer.train()
 
     trainer.save_model(OUTPUT_DIR)
     tokenizer.save_pretrained(OUTPUT_DIR)
 
+    # Evaluate best model on validation set
     results = trainer.evaluate()
     print("\n=== DistilBERT Validation Results ===")
     for key, value in results.items():
