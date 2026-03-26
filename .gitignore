@@ -13,7 +13,7 @@ __pycache__/
 
 # Model artifacts (large files)
 
-models/*/
+models/distilbert_default/
 models/*.joblib
 models/*.bin
 models/*.safetensors

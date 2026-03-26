@@ -10,7 +10,7 @@ from transformers import (
     Trainer,
 )
 
-from src.dataset import load_splits
+from dataset import load_splits
 
 
 MODEL_NAME = "distilbert/distilbert-base-uncased"

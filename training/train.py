@@ -6,9 +6,9 @@ from sklearn.metrics import (
     f1_score,
 )
 
-from src.dataset import load_splits
-from src.logisticReg_TF_IDF import create_logistic_reg_tfidf_model
-from src.naive_bayes_TF_IDF import create_naive_bayes_tfidf_model
+from dataset import load_splits
+from models.logisticReg_TF_IDF import create_logistic_reg_tfidf_model
+from models.naive_bayes_TF_IDF import create_naive_bayes_tfidf_model
 
 
 def evaluate(name, y_true, y_pred):
