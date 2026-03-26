@@ -13,11 +13,13 @@ __pycache__/
 
 # Model artifacts (large files)
 
-models/fake-news-bert/
+models/*/
 models/*.joblib
 models/*.bin
 models/*.safetensors
 models/*.json
+models/predicted_results.csv
+
 
 # Output files
 
