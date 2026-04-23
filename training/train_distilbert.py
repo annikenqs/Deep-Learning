@@ -14,7 +14,7 @@ from dataset import load_splits
 
 
 MODEL_NAME = "distilbert/distilbert-base-uncased"
-OUTPUT_DIR = "models/distilbert_default"
+OUTPUT_DIR = "/content/drive/MyDrive/Deep-Learning/models/distilbert_default"
 MAX_LENGTH = 256
 
 
