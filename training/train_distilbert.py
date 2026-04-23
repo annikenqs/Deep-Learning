@@ -16,7 +16,7 @@ from dataset import load_splits
 
 MODEL_NAME = "distilbert/distilbert-base-uncased"
 OUTPUT_DIR = "/content/drive/MyDrive/Deep-Learning/models/distilbert_default"
-MAX_LENGTH = 128
+MAX_LENGTH = 256
 
 
 def compute_metrics(eval_pred):
