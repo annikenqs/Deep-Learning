@@ -93,7 +93,7 @@ def main():
     # Training configuration
     training_args = TrainingArguments(
         output_dir=OUTPUT_DIR,
-        evaluation_strategy="epoch",
+        eval_strategy="epoch", 
         save_strategy="epoch",
         logging_strategy="epoch",
         learning_rate=2e-5,
