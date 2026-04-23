@@ -115,7 +115,6 @@ def main():
         train_dataset=train_hf,
         eval_dataset=val_hf,
         compute_metrics=compute_metrics,
-        tokenizer=tokenizer,
         data_collator=data_collator,
     )
 
