@@ -14,7 +14,7 @@ from transformers import (
 from dataset import load_splits
 
 
-MODEL_NAME = "distilbert/distilbert-base-uncased"
+MODEL_NAME = "distilbert-base-cased"
 OUTPUT_DIR = "/content/drive/MyDrive/Deep-Learning/models/distilbert_default"
 MAX_LENGTH = 256
 
