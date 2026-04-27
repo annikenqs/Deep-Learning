@@ -111,6 +111,17 @@ def run_distilbert_inference(test_df):
     y_pred = np.argmax(predictions.predictions, axis=1)
     y_true = test_df["label_id"].to_numpy()
 
+    results_df = test_df.copy()
+    results_df["pred_label"] = y_pred
+    results_df["true_label"] = y_true
+    results_df["correct"] = results_df["pred_label"] == results_df["true_label"]
+
+    failed_df = results_df[~results_df["correct"]]
+    failed_df.to_csv("distilbert_failed_examples.csv", index=False)
+
+    print("\nSaved failed examples to distilbert_failed_examples.csv")
+    print("Number of failed examples:", len(failed_df))
+
     print("\n--- DistilBERT ---")
     evaluate("DistilBERT (Test)", y_true, y_pred)
 

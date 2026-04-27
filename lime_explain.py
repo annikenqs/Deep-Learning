@@ -1,7 +1,7 @@
 import torch
+import pandas as pd
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from lime.lime_text import LimeTextExplainer
-from dataset import load_splits
 
 MODEL_DIR = "models/distilbert_default"
 MAX_LENGTH = 256
@@ -35,22 +35,20 @@ def predict_proba(texts):
 
 
 if __name__ == "__main__":
-    _, _, test_df = load_splits("Dataset")
+    failed_df = pd.read_csv("distilbert_failed_examples.csv")
 
-    row = test_df.iloc[0]
+    row = failed_df.iloc[0]
     sample_text = row["input_text"]
-    true_label = row["label_id"]
-
-    explainer = LimeTextExplainer(class_names=["real", "fake"])
+    true_label = row["true_label"]
+    pred_label = row["pred_label"]
 
     probs = predict_proba([sample_text])[0]
-    pred_label = probs.argmax()
 
     print("True label:", true_label)
     print("Predicted label:", pred_label)
     print("Probabilities:", probs)
-    print("\nSample text:\n")
-    print(sample_text[:1500])
+
+    explainer = LimeTextExplainer(class_names=["real", "fake"])
 
     explanation = explainer.explain_instance(
         sample_text,
