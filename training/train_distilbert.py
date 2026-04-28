@@ -8,13 +8,14 @@ from transformers import (
     AutoModelForSequenceClassification,
     TrainingArguments,
     Trainer,
+    DataCollatorWithPadding,
 )
 
 from dataset import load_splits
 
 
 MODEL_NAME = "distilbert/distilbert-base-uncased"
-OUTPUT_DIR = "models/distilbert_default"
+OUTPUT_DIR = "/content/drive/MyDrive/Deep-Learning/models/distilbert_default"
 MAX_LENGTH = 256
 
 
@@ -41,7 +42,6 @@ def tokenize_function(examples, tokenizer):
     return tokenizer(
         examples["input_text"],
         truncation=True,
-        padding="max_length",
         max_length=MAX_LENGTH,
     )
 
@@ -61,6 +61,7 @@ def main():
     )
 
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+    data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
 
     train_hf = train_hf.map(
         lambda batch: tokenize_function(batch, tokenizer),
@@ -92,18 +93,19 @@ def main():
     # Training configuration
     training_args = TrainingArguments(
         output_dir=OUTPUT_DIR,
-        eval_strategy="epoch",
+        eval_strategy="epoch", 
         save_strategy="epoch",
         logging_strategy="epoch",
         learning_rate=2e-5,
-        per_device_train_batch_size=8,
-        per_device_eval_batch_size=8,
+        per_device_train_batch_size=16,
+        per_device_eval_batch_size=16,
         num_train_epochs=3,
         weight_decay=0.01,
         load_best_model_at_end=True,
         metric_for_best_model="f1",
         save_total_limit=2,
         report_to="none",
+        fp16=True,
     )
 
     # Trainer handles training loop, evaluation, and saving
@@ -113,6 +115,7 @@ def main():
         train_dataset=train_hf,
         eval_dataset=val_hf,
         compute_metrics=compute_metrics,
+        data_collator=data_collator,
     )
 
     # Fine-tune the model
