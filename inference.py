@@ -3,6 +3,9 @@ import joblib
 import numpy as np
 import pandas as pd
 
+import torch
+from torch.utils.data import DataLoader
+
 from datasets import Dataset
 from sklearn.metrics import (
     accuracy_score,
@@ -53,6 +56,51 @@ def tokenize_function(examples, tokenizer):
         padding="max_length",
         max_length=MAX_LENGTH,
     )
+
+def run_distilbert_base_inference(test_df):
+    print("\n--- DistilBERT (Base, no fine-tuning) ---")
+
+    test_hf = Dataset.from_pandas(
+        test_df[["input_text", "label_id"]].rename(columns={"label_id": "labels"})
+    )
+
+    model_name = "distilbert-base-uncased"
+
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = AutoModelForSequenceClassification.from_pretrained(
+        model_name,
+        num_labels=2
+    )
+
+    test_hf = test_hf.map(
+        lambda batch: tokenize_function(batch, tokenizer),
+        batched=True,
+    )
+
+    test_hf = test_hf.remove_columns(["input_text"])
+
+    if "__index_level_0__" in test_hf.column_names:
+        test_hf = test_hf.remove_columns(["__index_level_0__"])
+
+    test_hf.set_format("torch")
+
+    dataloader = DataLoader(test_hf, batch_size=32)
+
+    model.eval()
+    all_preds = []
+
+    with torch.no_grad():
+        for batch in dataloader:
+            print("Processing batch...")
+            outputs = model(**batch)
+            logits = outputs.logits
+            preds = torch.argmax(logits, dim=1)
+            all_preds.extend(preds.cpu().numpy())
+
+    y_pred = np.array(all_preds)
+    y_true = test_df["label_id"].to_numpy()
+
+    evaluate("DistilBERT Base (Test)", y_true, y_pred)
 
 
 def run_baseline_inference(test_df):
@@ -122,6 +170,7 @@ def main():
 
     run_baseline_inference(test_df)
     run_distilbert_inference(test_df)
+    run_distilbert_base_inference(test_df)
 
 
 if __name__ == "__main__":
